@@ -1,1 +1,1 @@
-web: gunicorn mailmanapi-api.wsgi
+web: gunicorn mailmanapi.wsgi
