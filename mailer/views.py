@@ -9,9 +9,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, Email
 
-def index(request):
-    return JsonResponse({"message": "running"}) 
-
 @csrf_exempt
 @login_required
 def compose(request):
