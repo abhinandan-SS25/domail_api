@@ -82,21 +82,12 @@ WSGI_APPLICATION = 'mailmanapi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-try:
-    DATABASE_URL = subprocess.run(["heroku","config:get","DATABASE_URL", "--app", "mailmanapi"], capture_output=True, shell=True).stdout.decode("ascii").strip()
+DATABASE_URL = subprocess.run(["heroku","config:get","DATABASE_URL", "--app", "mailmanapi"], capture_output=True, shell=True).stdout.decode("ascii").strip()
 
-    DATABASES = {
+DATABASES = {
     "default" : dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=True)
-    }
-    
-except:
-    DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
 }
-
+    
 AUTH_USER_MODEL = "mailer.User"
 
 
