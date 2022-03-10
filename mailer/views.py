@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, Email
 
-def example(request):
+def index(request):
     return JsonResponse({"error": "running"}) 
 
 @csrf_exempt
