@@ -115,7 +115,7 @@ def email(request, email_id):
         }, status=400)
 
 @csrf_exempt
-def login(request):
+def auth_login(request):
     if request.method == "POST":
 
         f_data = json.loads(request.body)
@@ -135,18 +135,21 @@ def login(request):
                 "message": "Invalid credentials"
             })
 
-def logout(request):
+def auth_logout(request):
     logout(request)
     return JsonResponse({
         "message": "Logout successful"
     })
 
 @csrf_exempt
-def register(request):
+def auth_register(request):
     if request.method == "POST":
 
         f_data = json.loads(request.body)
-        email = f_data["email"]
+        print(f_data)
+
+        username = f_data["email"]
+        email = username + "@domail.com"
 
         # Ensure password matches confirmation
         password = f_data["password"]
@@ -158,7 +161,7 @@ def register(request):
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(email, email, password)
+            user = User.objects.create_user(username, email, password)
             user.first_name = f_data["firstname"]
             user.last_name = f_data["lastname"]
             user.save()
