@@ -170,7 +170,6 @@ def auth_register(request):
             return JsonResponse( {
                 "message": "Email pre-exists"
             })
-        login(request, user)
         return JsonResponse({
             "message": "Register successful"
         })
