@@ -127,19 +127,13 @@ def auth_login(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return JsonResponse({
-                "message": "Login successful"
-            })
+            return HttpResponse("Login successful")
         else:
-            return JsonResponse({
-                "message": "Invalid credentials"
-            })
+            return HttpResponse("Invalid credentials")
 
 def auth_logout(request):
     logout(request)
-    return JsonResponse({
-        "message": "Logout successful"
-    })
+    return HttpResponse("Logout successful")
 
 @csrf_exempt
 def auth_register(request):
@@ -155,9 +149,7 @@ def auth_register(request):
         password = f_data["password"]
         confirmation = f_data["confirmation"]
         if password != confirmation:
-            return JsonResponse({
-                "message": "Passwords unmatch"
-            })
+            return HttpResponse("Passwords unmatch")
 
         # Attempt to create new user
         try:
@@ -167,10 +159,6 @@ def auth_register(request):
             user.save()
         except IntegrityError as e:
             print(e)
-            return JsonResponse( {
-                "message": "Email pre-exists"
-            })
-        return JsonResponse({
-            "message": "Register successful"
-        })
+            return HttpResponse("Email pre-exists")
+        return HttpResponse("Register successful")
 
