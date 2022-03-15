@@ -120,7 +120,7 @@ def auth_login(request):
 
         f_data = json.loads(request.body)
         # Attempt to sign user in
-        email = f_data["email"]
+        email = f_data["email"].split("@")[0]
         password = f_data["password"]
         user = authenticate(request, username=email, password=password)
 
