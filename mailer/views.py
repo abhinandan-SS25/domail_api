@@ -3,23 +3,30 @@ import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
 
-from .models import User, Email
+from .models import User, Email, Groups
 
 @csrf_exempt
-@login_required
 def compose(request):
 
     # Composing a new email must be via POST
     if request.method != "POST":
         return JsonResponse({"error": "POST request required."}, status=400)
 
+    auth_login(request)
+
     # Check recipient emails
     data = json.loads(request.body)
-    emails = [email.strip() for email in data.get("recipients").split(",")]
+    recipients = data.get("recipients")
+    if isinstance(recipients,list):
+        emails = [email.strip() for email in recipients]
+    else:
+        emails = [email.strip() for email in recipients.split(",")]
     if emails == [""]:
         return JsonResponse({
             "error": "At least one recipient required."
@@ -39,7 +46,7 @@ def compose(request):
     # Get contents of email
     subject = data.get("subject", "")
     body = data.get("body", "")
-
+    important = data.get("important", False)
     # Create one email for each recipient, plus sender
     users = set()
     users.add(request.user)
@@ -50,7 +57,8 @@ def compose(request):
             sender=request.user,
             subject=subject,
             body=body,
-            read=user == request.user
+            read=user == request.user,
+            important=important
         )
         email.save()
         for recipient in recipients:
@@ -59,14 +67,15 @@ def compose(request):
 
     return JsonResponse({"message": "Email sent successfully."}, status=201)
 
-
-@login_required
+@csrf_exempt
 def mailbox(request, mailbox):
+
+    auth_login(request)
 
     # Filter emails returned based on mailbox
     if mailbox == "inbox":
         emails = Email.objects.filter(
-            user=request.user, recipients=request.user, archived=False
+            user=request.user, recipients=request.user, archived=False, important=False
         )
     elif mailbox == "sent":
         emails = Email.objects.filter(
@@ -75,6 +84,10 @@ def mailbox(request, mailbox):
     elif mailbox == "archive":
         emails = Email.objects.filter(
             user=request.user, recipients=request.user, archived=True
+        )
+    elif mailbox == "important":
+        emails = Email.objects.filter(
+            user=request.user, recipients=request.user, important=True
         )
     else:
         return JsonResponse({"error": "Invalid mailbox."}, status=400)
@@ -113,6 +126,47 @@ def email(request, email_id):
         return JsonResponse({
             "error": "GET or PUT request required."
         }, status=400)
+
+@csrf_exempt
+def accounts(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        user = data["username"].split("@")[0]
+        user_details = User.objects.filter(username=user)
+
+        return JsonResponse([user.serialize() for user in user_details], safe=False)
+
+    else:
+        return JsonResponse([user.serialize() for user in User.objects.all()], safe=False)
+
+@csrf_exempt
+def contacted (request):
+
+    auth_login(request)
+
+    emails_sent = Email.objects.filter(
+            user=request.user, sender=request.user
+        ).order_by("-timestamp")[:5]
+
+    print(emails_sent)
+
+    contacted = set()
+    for email in emails_sent:
+        recipients = {recipient.username for recipient in email.recipients.all()}
+        contacted = contacted.union(recipients)
+
+    contacted = list(contacted)[:5]
+
+    return JsonResponse([user.serialize() for user in User.objects.filter(username__in = contacted)], safe=False)
+
+@csrf_exempt
+def your_groups (request):
+
+    auth_login(request)
+
+    groups = Groups.objects.filter(Q(creator=request.user, members__in=[request.user]) | Q(members__in=[request.user])).distinct()
+
+    return JsonResponse([group.serialize() for group in groups], safe=False)
 
 @csrf_exempt
 def auth_login(request):

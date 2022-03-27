@@ -3,3 +3,4 @@ from .models import *
 
 admin.site.register(User)
 admin.site.register(Email)
+admin.site.register(Groups)

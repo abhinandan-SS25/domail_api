@@ -9,4 +9,7 @@ urlpatterns = [
     path("emails", views.compose, name="compose"),
     path("emails/<int:email_id>", views.email, name="email"),
     path("emails/<str:mailbox>", views.mailbox, name="mailbox"),
+    path("accounts", views.accounts, name="accounts"),
+    path("account/contacted", views.contacted, name="contacted"),
+    path("account/your_groups", views.your_groups, name="your_groups"),
 ]
