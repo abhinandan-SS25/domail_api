@@ -180,7 +180,10 @@ def your_groups (request):
             n_group.members.add(creator)
             n_group.save()
             return HttpResponse("Group "+data["name"]+" created")
-
+    elif data["operation"]=="delete_group":
+        group_id=int(data["id"])
+        Groups.objects.get(id=group_id).delete()
+        return HttpResponse("Deleted group")
     else:
         req_user = User.objects.get(username = data["email"].split("@")[0])
         groups = Groups.objects.filter(Q(creator=req_user, members__in=[req_user]) | Q(members__in=[req_user]))
