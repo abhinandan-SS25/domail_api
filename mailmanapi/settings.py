@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'mailmanapi.wsgi.application'
 DATABASE_URL = subprocess.run(["heroku","config:get","DATABASE_URL", "--app", "mailmanapi"], capture_output=True, shell=True).stdout.decode("ascii").strip()
 
 DATABASES = {
-    "default" : dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=True)
+    "default" : dj_database_url.config(default=DATABASE_URL, conn_max_age=0, ssl_require=True)
 }
     
 AUTH_USER_MODEL = "mailer.User"

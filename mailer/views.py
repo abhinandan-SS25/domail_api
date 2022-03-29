@@ -98,8 +98,9 @@ def mailbox(request, mailbox):
 
 
 @csrf_exempt
-@login_required
 def email(request, email_id):
+
+    auth_login(request)
 
     # Query for requested email
     try:
@@ -112,7 +113,7 @@ def email(request, email_id):
         return JsonResponse(email.serialize())
 
     # Update whether email is read or should be archived
-    elif request.method == "PUT":
+    elif request.method == "POST":
         data = json.loads(request.body)
         if data.get("read") is not None:
             email.read = data["read"]
@@ -124,7 +125,7 @@ def email(request, email_id):
     # Email must be via GET or PUT
     else:
         return JsonResponse({
-            "error": "GET or PUT request required."
+            "error": "GET or POST request required."
         }, status=400)
 
 @csrf_exempt
@@ -148,8 +149,6 @@ def contacted (request):
             user=request.user, sender=request.user
         ).order_by("-timestamp")[:5]
 
-    print(emails_sent)
-
     contacted = set()
     for email in emails_sent:
         recipients = {recipient.username for recipient in email.recipients.all()}
@@ -164,9 +163,30 @@ def your_groups (request):
 
     auth_login(request)
 
-    groups = Groups.objects.filter(Q(creator=request.user, members__in=[request.user]) | Q(members__in=[request.user])).distinct()
+    data = json.loads(request.body)
+    if data["operation"]=="new_group":
+        users = data["members"].split(",")
+        users = [user.strip() for user in users]
+        users = [user for user in users if user!=""]
+        if users == []:
+            return HttpResponse("Please Enter Valid Recipients")
+        else:
+            creator = User.objects.get(username = data["email"].split("@")[0])
+            n_group = Groups(group_name=data["name"],creator=creator)
+            n_group.save()
+            for user in users:
+                n_m = User.objects.get(username = user.split("@")[0])
+                n_group.members.add(n_m)
+            n_group.members.add(creator)
+            n_group.save()
+            return HttpResponse("Group "+data["name"]+" created")
 
-    return JsonResponse([group.serialize() for group in groups], safe=False)
+    else:
+        req_user = User.objects.get(username = data["email"].split("@")[0])
+        groups = Groups.objects.filter(Q(creator=req_user, members__in=[req_user]) | Q(members__in=[req_user]))
+        return JsonResponse([group.serialize() for group in groups], safe=False)
+
+    
 
 @csrf_exempt
 def auth_login(request):
@@ -194,7 +214,6 @@ def auth_register(request):
     if request.method == "POST":
 
         f_data = json.loads(request.body)
-        print(f_data)
 
         username = f_data["email"]
         email = username + "@domail.com"

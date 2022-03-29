@@ -33,6 +33,7 @@ class Email(models.Model):
             "body": self.body,
             "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
             "read": self.read,
+            "important": self.important,
             "archived": self.archived
         }
 
