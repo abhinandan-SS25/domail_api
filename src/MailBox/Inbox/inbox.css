@@ -3,11 +3,13 @@
     width:100%;
     background-color: white;
     min-height: 100vh;
+    animation:appear 6s 1;
 }
 
 #emails {
     width:73vw;
     min-height: 100vh;
+    animation:appear 6s 1;
 }
 
 #welcome {

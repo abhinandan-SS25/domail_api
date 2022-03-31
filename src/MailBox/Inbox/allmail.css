@@ -5,6 +5,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    animation:appear 6s 1;
 }
 
 .mailbox_name {

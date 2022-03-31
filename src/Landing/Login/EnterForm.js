@@ -15,6 +15,7 @@ const EnterForm = (props) => {
     })
 
     function submitEnterForm (event) {
+        setError("Logging in ...")
         setStatus(prev => !prev)
         event.preventDefault()
 

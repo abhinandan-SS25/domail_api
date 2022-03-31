@@ -15,6 +15,7 @@ const LoginForm = () => {
     })
 
     function submitLoginForm (event) {
+        setError("Logging in ...")
         setStatus((prev)=> !prev)
         event.preventDefault()
 
