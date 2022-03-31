@@ -13,7 +13,7 @@
     "react-draggable": "^4.4.4",
     "react-icons": "^4.3.1",
     "react-router-dom": "^6.2.2",
-    "react-scripts": "4.0.3",
+    "react-scripts": "5.0.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -42,5 +42,8 @@
   },
   "devDependencies": {
     "react-error-overlay": "^6.0.9"
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
   }
 }

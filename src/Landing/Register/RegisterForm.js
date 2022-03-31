@@ -59,15 +59,14 @@ const RegisterForm = () => {
                         event.preventDefault()
                     }
                     else if (response==="Register successful") {
-                        setError("Successfuly signed up").then(
-                            localStorage.setItem("domail_user", JSON.stringify({
+                        setError("Successfuly signed up")
+                        localStorage.setItem("domail_user", JSON.stringify({
                                 firstname:registerData.firstname,
                                 lastname:registerData.lastname,
                                 email:registerData.email
                             }))
-                        ).then(
-                            setNav((prev) => !prev)
-                            ).then(navigate)
+                        setStatus((prev)=> !prev)
+                        navigate()
                     }
                     else{
                         setError("Please try a different email username")
@@ -78,11 +77,11 @@ const RegisterForm = () => {
             }
         }
 
-        let n = useNavigate()
+    let n = useNavigate()
 
-        function navigate () {
-            nav && n("/")
-        }
+    function navigate () {
+        nav && n("/")
+    }
     
     return (
         <form onSubmit={submitRegister} className="form">
