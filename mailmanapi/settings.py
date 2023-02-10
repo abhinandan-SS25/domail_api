@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-jj753il513$ny(mei)t&$3&8!#@yq0wd*2h*z5vv)w)_+50%4_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.herokuapp.com', 'mailmanapi.herokuapp.com', 'https://neon.tech/']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.herokuapp.com', 'mailmanapi.herokuapp.com', 'https://neon.tech/', 'https://abhinandan-ss25.github.io/']
 
 
 # Application definition
