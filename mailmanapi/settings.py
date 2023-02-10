@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'mailmanapi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASE_URL = subprocess.run(["heroku","config:get","DATABASE_URL", "--app", "mailmanapi"], capture_output=True, shell=True).stdout.decode("ascii").strip()
+DATABASE_URL = "postgres://gwabhi22:iPtWyv5lY9Uc@ep-yellow-wave-246915.ap-southeast-1.aws.neon.tech/neondb" #subprocess.run(["heroku","config:get","DATABASE_URL", "--app", "mailmanapi"], capture_output=True, shell=True).stdout.decode("ascii").strip()
 
 DATABASES = {
     "default" : dj_database_url.config(default=DATABASE_URL, conn_max_age=0, ssl_require=True)
