@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-jj753il513$ny(mei)t&$3&8!#@yq0wd*2h*z5vv)w)_+50%4_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.herokuapp.com', 'mailmanapi.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.herokuapp.com', 'mailmanapi.herokuapp.com', 'https://neon.tech/']
 
 
 # Application definition
@@ -84,8 +84,18 @@ WSGI_APPLICATION = 'mailmanapi.wsgi.application'
 
 DATABASE_URL = "postgres://gwabhi22:iPtWyv5lY9Uc@ep-yellow-wave-246915.ap-southeast-1.aws.neon.tech/neondb" #subprocess.run(["heroku","config:get","DATABASE_URL", "--app", "mailmanapi"], capture_output=True, shell=True).stdout.decode("ascii").strip()
 
-DATABASES = {
+'''DATABASES = {
     "default" : dj_database_url.config(default=DATABASE_URL, conn_max_age=0, ssl_require=True)
+}'''
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'neondb',
+        'USER': 'gwabhi22',
+        'PASSWORD': 'iPtWyv5lY9Uc',
+        'HOST': 'ep-yellow-wave-246915.ap-southeast-1.aws.neon.tech',
+        'PORT': '5432',
+    }
 }
     
 AUTH_USER_MODEL = "mailer.User"
