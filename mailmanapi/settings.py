@@ -11,8 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-import subprocess, dj_database_url
-
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'sslserver'
 ]
 
 MIDDLEWARE = [
@@ -82,20 +82,10 @@ WSGI_APPLICATION = 'mailmanapi.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASE_URL = "postgres://gwabhi22:iPtWyv5lY9Uc@ep-yellow-wave-246915.ap-southeast-1.aws.neon.tech/neondb" #subprocess.run(["heroku","config:get","DATABASE_URL", "--app", "mailmanapi"], capture_output=True, shell=True).stdout.decode("ascii").strip()
-
-'''DATABASES = {
-    "default" : dj_database_url.config(default=DATABASE_URL, conn_max_age=0, ssl_require=True)
-}'''
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'neondb',
-        'USER': 'gwabhi22',
-        'PASSWORD': 'iPtWyv5lY9Uc',
-        'HOST': 'ep-yellow-wave-246915.ap-southeast-1.aws.neon.tech',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR , 'db.sqlite3'),
     }
 }
     
